@@ -1,0 +1,103 @@
+<UserControl x:Class="BEHGestPro.UI.Views.Formations.FormationFormView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:conv="clr-namespace:BEHGestPro.UI.Converters"
+             Width="540" Background="{StaticResource SurfaceMediumBrush}">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <conv:InvertBoolConverter x:Key="InvertBool" />
+
+        <Style x:Key="Lbl" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#90A4AE" />
+            <Setter Property="Margin"     Value="0,10,0,4" />
+        </Style>
+        <Style x:Key="FBox" TargetType="TextBox">
+            <Setter Property="Background"               Value="#1A1F3A" />
+            <Setter Property="Foreground"               Value="White" />
+            <Setter Property="CaretBrush"               Value="White" />
+            <Setter Property="SelectionBrush"           Value="#00ACC1" />
+            <Setter Property="BorderBrush"              Value="#3A4168" />
+            <Setter Property="BorderThickness"          Value="1" />
+            <Setter Property="Padding"                  Value="10,7" />
+            <Setter Property="FontSize"                 Value="13" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Margin="24,20,24,24">
+
+        <!-- Code -->
+        <TextBlock Text="Code Formation" Style="{StaticResource Lbl}" />
+        <TextBox Text="{Binding Formation.Code}" IsReadOnly="True"
+                 Style="{StaticResource FBox}" Background="#131829" Foreground="#546E7A" />
+
+        <!-- Intitulé / Catégorie -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" /><ColumnDefinition Width="10" /><ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Intitulé *" Style="{StaticResource Lbl}" />
+                <TextBox Text="{Binding Formation.Intitule, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource FBox}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Catégorie" Style="{StaticResource Lbl}" />
+                <TextBox Text="{Binding Formation.Categorie, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource FBox}" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Durée / Coût -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition /><ColumnDefinition Width="10" /><ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Durée (Heures)" Style="{StaticResource Lbl}" />
+                <TextBox Text="{Binding Formation.DureeHeures, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource FBox}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Coût (XAF)" Style="{StaticResource Lbl}" />
+                <TextBox Text="{Binding Formation.Cout, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource FBox}" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Description -->
+        <TextBlock Text="Description" Style="{StaticResource Lbl}" />
+        <TextBox Text="{Binding Formation.Description, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource FBox}" Height="60" TextWrapping="Wrap" VerticalContentAlignment="Top" />
+
+        <!-- Erreur -->
+        <Border Background="#1A3040" CornerRadius="6" Padding="10,8" Margin="0,12,0,0"
+                Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF9A9A"
+                       FontSize="12" TextWrapping="Wrap" />
+        </Border>
+
+        <!-- Boutons -->
+        <Grid Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition /><ColumnDefinition Width="10" /><ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Annuler"
+                    Style="{StaticResource BtnOutline}"
+                    Click="CancelBtn_Click"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertBool}}" />
+            <Button Grid.Column="2" Style="{StaticResource BtnGradient}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertBool}}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="ContentSave" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBlock Text="Enregistrer" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+    </StackPanel>
+</UserControl>
