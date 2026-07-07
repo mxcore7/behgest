@@ -28,12 +28,42 @@
         </Style>
     </UserControl.Resources>
 
-    <StackPanel Margin="24,20,24,24">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24,20,24,24">
 
-        <!-- Matricule -->
-        <TextBlock Text="Matricule Employé" Style="{StaticResource Lbl}" />
-        <TextBox Text="{Binding Employe.Matricule}" IsReadOnly="True"
-                 Style="{StaticResource FBox}" Background="#131829" Foreground="#546E7A" />
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Photo -->
+            <StackPanel Grid.Column="0">
+                <Border Width="80" Height="80" CornerRadius="40" Background="#131829" 
+                        BorderBrush="#3A4168" BorderThickness="1" ClipToBounds="True">
+                    <Grid>
+                        <materialDesign:PackIcon Kind="Account" Width="40" Height="40" Foreground="#3A4168"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Image Source="{Binding Employe.PhotoPath}" Stretch="UniformToFill" />
+                    </Grid>
+                </Border>
+                <Button Style="{StaticResource BtnOutline}" Height="28" Margin="0,8,0,0" Padding="8,0"
+                        Command="{Binding SelectPhotoCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Camera" Width="14" Height="14" Margin="0,0,4,0" />
+                        <TextBlock Text="Photo" FontSize="11" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <!-- Matricule -->
+            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <TextBlock Text="Matricule Employé" Style="{StaticResource Lbl}" />
+                <TextBox Text="{Binding Employe.Matricule}" IsReadOnly="True"
+                         Style="{StaticResource FBox}" Background="#131829" Foreground="#546E7A" />
+            </StackPanel>
+        </Grid>
 
         <!-- Nom / Prénom -->
         <Grid>
@@ -127,5 +157,6 @@
                 </StackPanel>
             </Button>
         </Grid>
-    </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

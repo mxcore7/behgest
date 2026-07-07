@@ -19,10 +19,10 @@ public class DashboardService
 
         // Toutes les requêtes sur le même contexte, séquentiellement
         var totalApprenants    = await ctx.Apprenants.CountAsync();
-        var formationsActives  = await ctx.SessionsFormation.CountAsync(s => s.Statut == "ouverte");
-        var commandesEnCours   = await ctx.Commandes.CountAsync(c => c.Statut == "en_cours");
+        var formationsActives  = await ctx.Formations.CountAsync();
+        var commandesEnCours   = await ctx.Commandes.CountAsync(c => c.Statut == "en_attente" || c.Statut == "en_cours");
         var paiementsMois      = await GetTotalMoisActuelAsync(ctx);
-        var stagiairesActuels  = await ctx.Stagiaires.CountAsync(s => s.Statut == "actif");
+        var stagiairesActuels  = await ctx.Stagiaires.CountAsync(s => s.Statut == "en_cours" || s.Statut == "actif");
         var salairesEnAttente  = await ctx.Salaires.CountAsync(s => s.Statut == "en_attente");
 
         var now   = DateTime.Today;

@@ -34,6 +34,31 @@ public partial class EmployeFormViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SelectPhoto()
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Sélectionner une photo",
+            Filter = "Fichiers images (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png"
+        };
+        if (dialog.ShowDialog() == true)
+        {
+            var photosDir = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Photos", "Employes");
+            if (!System.IO.Directory.Exists(photosDir))
+                System.IO.Directory.CreateDirectory(photosDir);
+
+            var ext = System.IO.Path.GetExtension(dialog.FileName);
+            var fileName = $"{Employe.Matricule}_{System.Guid.NewGuid():N}{ext}";
+            var destPath = System.IO.Path.Combine(photosDir, fileName);
+
+            System.IO.File.Copy(dialog.FileName, destPath, true);
+
+            Employe.PhotoPath = destPath;
+            OnPropertyChanged(nameof(Employe));
+        }
+    }
+
+    [RelayCommand]
     private async Task SaveAsync()
     {
         if (string.IsNullOrWhiteSpace(Employe.Nom) || string.IsNullOrWhiteSpace(Employe.Prenom))

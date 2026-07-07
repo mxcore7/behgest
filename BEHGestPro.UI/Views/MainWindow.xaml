@@ -10,6 +10,7 @@
         xmlns:vmc="clr-namespace:BEHGestPro.UI.ViewModels.Commandes"
         xmlns:vmsal="clr-namespace:BEHGestPro.UI.ViewModels.Salaires"
         xmlns:vme="clr-namespace:BEHGestPro.UI.ViewModels.Employes"
+        xmlns:vmu="clr-namespace:BEHGestPro.UI.ViewModels.Utilisateurs"
         xmlns:views="clr-namespace:BEHGestPro.UI.Views.Apprenants"
         xmlns:viewss="clr-namespace:BEHGestPro.UI.Views.Stagiaires"
         xmlns:viewsf="clr-namespace:BEHGestPro.UI.Views.Formations"
@@ -17,6 +18,7 @@
         xmlns:viewsc="clr-namespace:BEHGestPro.UI.Views.Commandes"
         xmlns:viewssal="clr-namespace:BEHGestPro.UI.Views.Salaires"
         xmlns:viewse="clr-namespace:BEHGestPro.UI.Views.Employes"
+        xmlns:viewsu="clr-namespace:BEHGestPro.UI.Views.Utilisateurs"
         xmlns:conv="clr-namespace:BEHGestPro.UI.Converters"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="BEHGest Pro"
@@ -26,6 +28,8 @@
         Background="{StaticResource SurfaceDarkBrush}">
 
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
         <!-- DataTemplates to map ViewModels to Views -->
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
             <views:DashboardView />
@@ -50,6 +54,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type vme:EmployeListViewModel}">
             <viewse:EmployeListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmu:UtilisateurListViewModel}">
+            <viewsu:UtilisateurListView />
         </DataTemplate>
     </Window.Resources>
 
@@ -108,12 +115,15 @@
                             </Border>
                         </Button>
 
+                        <!-- ── GESTION (Secrétaire + Directeur + Admin) ── -->
                         <TextBlock Text="GESTION" FontSize="10" FontWeight="Bold" Foreground="#455A64"
-                                   Margin="12,12,0,6" />
+                                   Margin="12,12,0,6"
+                                   Visibility="{Binding ShowApprenants, Converter={StaticResource BoolToVis}}" />
 
                         <Button Command="{Binding NavigateToCommand}" CommandParameter="Apprenants"
                                 Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
-                                Margin="0,2" HorizontalAlignment="Stretch">
+                                Margin="0,2" HorizontalAlignment="Stretch"
+                                Visibility="{Binding ShowApprenants, Converter={StaticResource BoolToVis}}">
                             <Border Style="{StaticResource NavItem}" HorizontalAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountGroup" Width="20" Height="20"
@@ -126,7 +136,8 @@
 
                         <Button Command="{Binding NavigateToCommand}" CommandParameter="Stagiaires"
                                 Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
-                                Margin="0,2" HorizontalAlignment="Stretch">
+                                Margin="0,2" HorizontalAlignment="Stretch"
+                                Visibility="{Binding ShowStagiaires, Converter={StaticResource BoolToVis}}">
                             <Border Style="{StaticResource NavItem}" HorizontalAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountSchool" Width="20" Height="20"
@@ -139,7 +150,8 @@
 
                         <Button Command="{Binding NavigateToCommand}" CommandParameter="Formations"
                                 Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
-                                Margin="0,2" HorizontalAlignment="Stretch">
+                                Margin="0,2" HorizontalAlignment="Stretch"
+                                Visibility="{Binding ShowFormations, Converter={StaticResource BoolToVis}}">
                             <Border Style="{StaticResource NavItem}" HorizontalAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="BookOpenVariant" Width="20" Height="20"
@@ -150,21 +162,9 @@
                             </Border>
                         </Button>
 
-                        <TextBlock Text="FINANCES" FontSize="10" FontWeight="Bold" Foreground="#455A64"
+                        <!-- ── PRODUCTION (Tous les rôles) ── -->
+                        <TextBlock Text="PRODUCTION" FontSize="10" FontWeight="Bold" Foreground="#455A64"
                                    Margin="12,12,0,6" />
-
-                        <Button Command="{Binding NavigateToCommand}" CommandParameter="Paiements"
-                                Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
-                                Margin="0,2" HorizontalAlignment="Stretch">
-                            <Border Style="{StaticResource NavItem}" HorizontalAlignment="Stretch">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="CreditCard" Width="20" Height="20"
-                                                            Foreground="#B0BEC5" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Paiements" Margin="12,0,0,0"
-                                               Foreground="White" FontSize="13" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Border>
-                        </Button>
 
                         <Button Command="{Binding NavigateToCommand}" CommandParameter="Commandes"
                                 Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
@@ -179,12 +179,34 @@
                             </Border>
                         </Button>
 
+                        <!-- ── FINANCES (Secrétaire + Directeur + Admin) ── -->
+                        <TextBlock Text="FINANCES" FontSize="10" FontWeight="Bold" Foreground="#455A64"
+                                   Margin="12,12,0,6"
+                                   Visibility="{Binding ShowPaiements, Converter={StaticResource BoolToVis}}" />
+
+                        <Button Command="{Binding NavigateToCommand}" CommandParameter="Paiements"
+                                Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
+                                Margin="0,2" HorizontalAlignment="Stretch"
+                                Visibility="{Binding ShowPaiements, Converter={StaticResource BoolToVis}}">
+                            <Border Style="{StaticResource NavItem}" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="CreditCard" Width="20" Height="20"
+                                                            Foreground="#B0BEC5" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Paiements" Margin="12,0,0,0"
+                                               Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </Button>
+
+                        <!-- ── RH (Admin + Directeur) ── -->
                         <TextBlock Text="RH" FontSize="10" FontWeight="Bold" Foreground="#455A64"
-                                   Margin="12,12,0,6" />
+                                   Margin="12,12,0,6"
+                                   Visibility="{Binding ShowEmployes, Converter={StaticResource BoolToVis}}" />
 
                         <Button Command="{Binding NavigateToCommand}" CommandParameter="Employes"
                                 Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
-                                Margin="0,2" HorizontalAlignment="Stretch">
+                                Margin="0,2" HorizontalAlignment="Stretch"
+                                Visibility="{Binding ShowEmployes, Converter={StaticResource BoolToVis}}">
                             <Border Style="{StaticResource NavItem}" HorizontalAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="BadgeAccount" Width="20" Height="20"
@@ -197,7 +219,8 @@
 
                         <Button Command="{Binding NavigateToCommand}" CommandParameter="Salaires"
                                 Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
-                                Margin="0,2" HorizontalAlignment="Stretch">
+                                Margin="0,2" HorizontalAlignment="Stretch"
+                                Visibility="{Binding ShowSalaires, Converter={StaticResource BoolToVis}}">
                             <Border Style="{StaticResource NavItem}" HorizontalAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="CurrencyUsd" Width="20" Height="20"
@@ -207,6 +230,26 @@
                                 </StackPanel>
                             </Border>
                         </Button>
+
+                        <!-- ── ADMINISTRATION (Admin seulement) ── -->
+                        <TextBlock Text="ADMINISTRATION" FontSize="10" FontWeight="Bold" Foreground="#455A64"
+                                   Margin="12,12,0,6"
+                                   Visibility="{Binding ShowUtilisateurs, Converter={StaticResource BoolToVis}}" />
+
+                        <Button Command="{Binding NavigateToCommand}" CommandParameter="Utilisateurs"
+                                Style="{StaticResource BtnIcon}" Width="Auto" Height="Auto"
+                                Margin="0,2" HorizontalAlignment="Stretch"
+                                Visibility="{Binding ShowUtilisateurs, Converter={StaticResource BoolToVis}}">
+                            <Border Style="{StaticResource NavItem}" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="AccountKey" Width="20" Height="20"
+                                                            Foreground="#CE93D8" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Utilisateurs" Margin="12,0,0,0"
+                                               Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </Button>
+
                     </StackPanel>
                 </ScrollViewer>
 
@@ -221,7 +264,7 @@
                             <TextBlock Text="{Binding CurrentUserName}" Foreground="White"
                                        FontSize="12" FontWeight="SemiBold"
                                        TextTrimming="CharacterEllipsis" />
-                            <TextBlock Text="Utilisateur connecté" Foreground="#455A64" FontSize="10" />
+                            <TextBlock Text="{Binding CurrentRoleLabel}" Foreground="#00ACC1" FontSize="10" FontWeight="SemiBold" />
                         </StackPanel>
                         <Button Grid.Column="1" Style="{StaticResource BtnIcon}"
                                 Command="{Binding LogoutCommand}" ToolTip="Déconnexion">

@@ -45,11 +45,19 @@ public class BadgeEmployeDocument : IDocument
             // Espace photo & Infos
             col.Item().Padding(8).Column(body =>
             {
-                // Encadré Photo fictif / Avatar
-                body.Item().AlignCenter().Width(35, Unit.Millimetre).Height(35, Unit.Millimetre)
-                    .Background("#E0F7FA").Border(1).BorderColor("#00ACC1")
-                    .AlignCenter().AlignMiddle()
-                    .Text("PHOTO").FontSize(8).Bold().FontColor("#00838F");
+                // Encadré Photo
+                if (!string.IsNullOrWhiteSpace(_employe.PhotoPath) && System.IO.File.Exists(_employe.PhotoPath))
+                {
+                    body.Item().AlignCenter().Width(35, Unit.Millimetre).Height(35, Unit.Millimetre)
+                        .Image(_employe.PhotoPath);
+                }
+                else
+                {
+                    body.Item().AlignCenter().Width(35, Unit.Millimetre).Height(35, Unit.Millimetre)
+                        .Background("#E0F7FA").Border(1).BorderColor("#00ACC1")
+                        .AlignCenter().AlignMiddle()
+                        .Text("PHOTO").FontSize(8).Bold().FontColor("#00838F");
+                }
 
                 body.Item().PaddingTop(6).Text($"{_employe.Prenom} {_employe.Nom}".ToUpper())
                     .Bold().FontSize(11).FontColor("#1565C0").AlignCenter();

@@ -30,7 +30,7 @@ public partial class EmployeListViewModel : ObservableObject
         await vm.PrepareNewAsync();
 
         var view = new EmployeFormView { DataContext = vm };
-        var dialog = new FormDialog("Nouvel employé", view);
+        var dialog = new FormDialog("Nouvel employé", view, height: 650);
         var mainWin = System.Windows.Application.Current.MainWindow;
         if (mainWin != null && mainWin != dialog) dialog.Owner = mainWin;
         vm.OnSaved = async () =>
@@ -49,7 +49,7 @@ public partial class EmployeListViewModel : ObservableObject
         await vm.LoadForEditAsync(employe.Id);
 
         var view = new EmployeFormView { DataContext = vm };
-        var dialog = new FormDialog("Modifier employé", view);
+        var dialog = new FormDialog("Modifier employé", view, height: 650);
         var mainWin = System.Windows.Application.Current.MainWindow;
         if (mainWin != null && mainWin != dialog) dialog.Owner = mainWin;
         vm.OnSaved = async () =>

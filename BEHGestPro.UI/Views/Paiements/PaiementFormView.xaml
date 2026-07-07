@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:conv="clr-namespace:BEHGestPro.UI.Converters"
-             Width="540" Background="{StaticResource SurfaceMediumBrush}">
+             Width="560" Background="{StaticResource SurfaceMediumBrush}">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -28,7 +28,33 @@
         </Style>
     </UserControl.Resources>
 
-    <StackPanel Margin="24,20,24,24">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24,20,24,24">
+
+        <!-- Sélection commande (liaison automatique) -->
+        <Border Background="#0D1128" CornerRadius="8" Padding="12,10" Margin="0,0,0,8">
+            <StackPanel>
+                <TextBlock Text="🔗  Lier à une commande (optionnel)" Foreground="#00ACC1"
+                           FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6" />
+                <ComboBox ItemsSource="{Binding Commandes}"
+                          SelectedItem="{Binding SelectedCommande}"
+                          Background="#1A1F3A" Foreground="White" BorderBrush="#3A4168" Padding="10,7">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Numero}" FontWeight="SemiBold" Foreground="White" Margin="0,0,8,0" />
+                                <TextBlock Text=" — " Foreground="#546E7A" />
+                                <TextBlock Text="{Binding ClientNom}" Foreground="#90A4AE" Margin="4,0,8,0" />
+                                <TextBlock Text="{Binding CoutTotal, StringFormat=N0}" Foreground="#00ACC1" />
+                                <TextBlock Text=" XAF" Foreground="#546E7A" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock Text="↑ La sélection remplit automatiquement les montants et la source."
+                           Foreground="#546E7A" FontSize="10" Margin="0,4,0,0" />
+            </StackPanel>
+        </Border>
 
         <!-- Référence -->
         <TextBlock Text="Référence" Style="{StaticResource Lbl}" />
@@ -71,6 +97,16 @@
             </StackPanel>
         </Grid>
 
+        <!-- Récapitulatif restant -->
+        <Border Background="#131829" CornerRadius="6" Padding="10,8" Margin="0,4,0,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Restant à payer : " Foreground="#90A4AE" FontSize="12" />
+                <TextBlock Text="{Binding Paiement.MontantRestant, StringFormat=N0}"
+                           Foreground="#EF9A9A" FontWeight="Bold" FontSize="13" />
+                <TextBlock Text=" XAF" Foreground="#546E7A" FontSize="12" />
+            </StackPanel>
+        </Border>
+
         <!-- Notes -->
         <TextBlock Text="Notes / Observations" Style="{StaticResource Lbl}" />
         <TextBox Text="{Binding Paiement.Notes, UpdateSourceTrigger=PropertyChanged}"
@@ -101,5 +137,6 @@
                 </StackPanel>
             </Button>
         </Grid>
-    </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

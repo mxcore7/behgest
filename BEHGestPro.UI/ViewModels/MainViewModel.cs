@@ -8,6 +8,7 @@ using BEHGestPro.UI.ViewModels.Formations;
 using BEHGestPro.UI.ViewModels.Paiements;
 using BEHGestPro.UI.ViewModels.Salaires;
 using BEHGestPro.UI.ViewModels.Stagiaires;
+using BEHGestPro.UI.ViewModels.Utilisateurs;
 using System;
 
 namespace BEHGestPro.UI.ViewModels;
@@ -26,8 +27,31 @@ public partial class MainViewModel : ObservableObject
         NavigateTo("Dashboard");
     }
 
-    public string CurrentUserName => _authService.CurrentUser?.NomComplet ?? "Utilisateur";
-    public bool IsAdmin => _authService.IsAdmin;
+    // ── Infos utilisateur ────────────────────────────────────────────────────
+    public string CurrentUserName  => _authService.CurrentUser?.NomComplet ?? "Utilisateur";
+    public string CurrentRoleLabel => AuthService.LibelleRole(_authService.CurrentRole);
+
+    // ── Permissions (pour Visibility bindings dans le XAML) ─────────────────
+    public bool IsAdmin          => _authService.IsAdmin;
+    public bool CanEnregistrer   => _authService.CanEnregistrer;
+    public bool CanConsulter     => _authService.CanConsulter;
+    public bool CanManageUsers   => _authService.CanManageUsers;
+    public bool CanPrintAll      => _authService.CanPrintAll;
+    public bool CanPrintJour     => _authService.CanPrintJour;
+    public bool CanUpdateTravaux => _authService.CanUpdateTravaux;
+
+    // Modules visibles par rôle
+    public bool ShowApprenants   => _authService.IsAdmin || _authService.IsSecretaire || _authService.IsDirecteur;
+    public bool ShowStagiaires   => _authService.IsAdmin || _authService.IsSecretaire || _authService.IsDirecteur;
+    public bool ShowFormations   => _authService.IsAdmin || _authService.IsSecretaire || _authService.IsDirecteur;
+    public bool ShowPaiements    => _authService.IsAdmin || _authService.IsSecretaire || _authService.IsDirecteur;
+    public bool ShowCommandes    => true; // Tous les rôles voient les commandes (lecture seule pour certains)
+    public bool ShowEmployes     => _authService.IsAdmin || _authService.IsDirecteur;
+    public bool ShowSalaires     => _authService.IsAdmin || _authService.IsDirecteur;
+    public bool ShowUtilisateurs => _authService.IsAdmin;
+
+    // Commandes : peut créer / modifier / supprimer ?
+    public bool CanWriteCommandes => _authService.IsAdmin || _authService.IsSecretaire || _authService.IsDirecteur;
 
     [RelayCommand]
     private void NavigateTo(string module)
@@ -35,15 +59,16 @@ public partial class MainViewModel : ObservableObject
         ActiveModule = module;
         CurrentViewModel = module switch
         {
-            "Dashboard"   => App.GetService<DashboardViewModel>(),
-            "Apprenants"  => App.GetService<ApprenantListViewModel>(),
-            "Stagiaires"  => App.GetService<StagiaireListViewModel>(),
-            "Formations"  => App.GetService<FormationListViewModel>(),
-            "Paiements"   => App.GetService<PaiementListViewModel>(),
-            "Commandes"   => App.GetService<CommandeListViewModel>(),
-            "Salaires"    => App.GetService<SalaireListViewModel>(),
-            "Employes"    => App.GetService<EmployeListViewModel>(),
-            _             => App.GetService<DashboardViewModel>()
+            "Dashboard"    => App.GetService<DashboardViewModel>(),
+            "Apprenants"   => App.GetService<ApprenantListViewModel>(),
+            "Stagiaires"   => App.GetService<StagiaireListViewModel>(),
+            "Formations"   => App.GetService<FormationListViewModel>(),
+            "Paiements"    => App.GetService<PaiementListViewModel>(),
+            "Commandes"    => App.GetService<CommandeListViewModel>(),
+            "Salaires"     => App.GetService<SalaireListViewModel>(),
+            "Employes"     => App.GetService<EmployeListViewModel>(),
+            "Utilisateurs" => App.GetService<UtilisateurListViewModel>(),
+            _              => App.GetService<DashboardViewModel>()
         };
     }
 

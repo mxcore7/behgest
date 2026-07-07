@@ -10,6 +10,7 @@ using BEHGestPro.UI.ViewModels.Formations;
 using BEHGestPro.UI.ViewModels.Paiements;
 using BEHGestPro.UI.ViewModels.Salaires;
 using BEHGestPro.UI.ViewModels.Stagiaires;
+using BEHGestPro.UI.ViewModels.Utilisateurs;
 using BEHGestPro.UI.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -93,6 +94,8 @@ public partial class App : System.Windows.Application
                 services.AddTransient<SalaireFormViewModel>();
                 services.AddTransient<EmployeListViewModel>();
                 services.AddTransient<EmployeFormViewModel>();
+                services.AddTransient<UtilisateurListViewModel>();
+                services.AddTransient<UtilisateurFormViewModel>();
 
                 // Views
                 services.AddTransient<LoginView>();

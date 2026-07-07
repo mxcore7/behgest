@@ -62,7 +62,7 @@ public partial class ApprenantListViewModel : ObservableObject
         await vm.LoadForEditAsync(apprenant.Id);
 
         var view   = new ApprenantFormView { DataContext = vm };
-        var dialog = new FormDialog("Modifier apprenant", view);
+        var dialog = new FormDialog("Modifier l'apprenant", view);
         var mainWin = System.Windows.Application.Current.MainWindow;
         if (mainWin != null && mainWin != dialog) dialog.Owner = mainWin;
         vm.OnSaved = async () =>

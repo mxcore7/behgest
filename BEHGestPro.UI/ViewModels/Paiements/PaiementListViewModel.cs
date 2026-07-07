@@ -30,7 +30,7 @@ public partial class PaiementListViewModel : ObservableObject
         await vm.PrepareNewAsync();
 
         var view = new PaiementFormView { DataContext = vm };
-        var dialog = new FormDialog("Nouveau paiement", view);
+        var dialog = new FormDialog("Nouveau paiement", view, height: 700);
         var mainWin = System.Windows.Application.Current.MainWindow;
         if (mainWin != null && mainWin != dialog) dialog.Owner = mainWin;
         vm.OnSaved = async () =>
@@ -38,7 +38,8 @@ public partial class PaiementListViewModel : ObservableObject
             dialog.CloseWithSuccess();
             await LoadAsync();
         };
-        dialog.ShowDialog();
+        await System.Windows.Threading.Dispatcher.CurrentDispatcher
+            .InvokeAsync(() => dialog.ShowDialog()).Task;
     }
 
     [RelayCommand]
@@ -49,7 +50,7 @@ public partial class PaiementListViewModel : ObservableObject
         await vm.LoadForEditAsync(paiement.Id);
 
         var view = new PaiementFormView { DataContext = vm };
-        var dialog = new FormDialog("Modifier paiement", view);
+        var dialog = new FormDialog("Modifier paiement", view, height: 650);
         var mainWin = System.Windows.Application.Current.MainWindow;
         if (mainWin != null && mainWin != dialog) dialog.Owner = mainWin;
         vm.OnSaved = async () =>
@@ -57,7 +58,8 @@ public partial class PaiementListViewModel : ObservableObject
             dialog.CloseWithSuccess();
             await LoadAsync();
         };
-        dialog.ShowDialog();
+        await System.Windows.Threading.Dispatcher.CurrentDispatcher
+            .InvokeAsync(() => dialog.ShowDialog()).Task;
     }
 
     [RelayCommand]
