@@ -16,21 +16,37 @@ public partial class EmployeFormViewModel : ObservableObject
     [ObservableProperty] private string _errorMessage = string.Empty;
     [ObservableProperty] private bool _hasError;
 
+    /// <summary>Chemin absolu résolu pour l'affichage WPF (Image binding).</summary>
+    [ObservableProperty] private string? _photoAbsolutePath;
+
     public System.Action? OnSaved { get; set; }
 
     public EmployeFormViewModel(EmployeService service) => _service = service;
+
+    /// <summary>Résout le chemin relatif en chemin absolu pour l'affichage.</summary>
+    private string? ResolveAbsolutePath(string? relativePath)
+    {
+        if (string.IsNullOrWhiteSpace(relativePath)) return null;
+        if (System.IO.Path.IsPathRooted(relativePath)) return relativePath;
+        return System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, relativePath);
+    }
 
     public async Task PrepareNewAsync()
     {
         IsEdit = false;
         Employe = new Employe { Matricule = await _service.GenererMatriculeAsync(), Actif = true };
+        PhotoAbsolutePath = null;
     }
 
     public async Task LoadForEditAsync(int id)
     {
         IsEdit = true;
         var e = await _service.GetByIdAsync(id);
-        if (e is not null) Employe = e;
+        if (e is not null)
+        {
+            Employe = e;
+            PhotoAbsolutePath = ResolveAbsolutePath(e.PhotoPath);
+        }
     }
 
     [RelayCommand]
@@ -53,9 +69,10 @@ public partial class EmployeFormViewModel : ObservableObject
 
             System.IO.File.Copy(dialog.FileName, destPath, true);
 
-            // Stocker le chemin RELATIF pour la portabilité entre machines
+            // Stocker le chemin RELATIF en base pour la portabilité entre machines
             Employe.PhotoPath = System.IO.Path.Combine("Photos", "Employes", fileName);
-            OnPropertyChanged(nameof(Employe));
+            // Mettre à jour le chemin absolu pour l'affichage WPF immédiat
+            PhotoAbsolutePath = destPath;
         }
     }
 
