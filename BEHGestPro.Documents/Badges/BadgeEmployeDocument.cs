@@ -46,10 +46,15 @@ public class BadgeEmployeDocument : IDocument
             col.Item().Padding(8).Column(body =>
             {
                 // Encadré Photo
-                if (!string.IsNullOrWhiteSpace(_employe.PhotoPath) && System.IO.File.Exists(_employe.PhotoPath))
+                var photoPath = _employe.PhotoPath;
+                // Si le chemin est relatif, le reconstituer à partir du répertoire de l'application
+                if (!string.IsNullOrWhiteSpace(photoPath) && !System.IO.Path.IsPathRooted(photoPath))
+                    photoPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, photoPath);
+
+                if (!string.IsNullOrWhiteSpace(photoPath) && System.IO.File.Exists(photoPath))
                 {
                     body.Item().AlignCenter().Width(35, Unit.Millimetre).Height(35, Unit.Millimetre)
-                        .Image(_employe.PhotoPath);
+                        .Image(photoPath);
                 }
                 else
                 {

@@ -53,7 +53,8 @@ public partial class EmployeFormViewModel : ObservableObject
 
             System.IO.File.Copy(dialog.FileName, destPath, true);
 
-            Employe.PhotoPath = destPath;
+            // Stocker le chemin RELATIF pour la portabilité entre machines
+            Employe.PhotoPath = System.IO.Path.Combine("Photos", "Employes", fileName);
             OnPropertyChanged(nameof(Employe));
         }
     }
